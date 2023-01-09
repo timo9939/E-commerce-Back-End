@@ -44,7 +44,7 @@ router.get('/:id', (req, res) => {
   
 .then(dbCategoryData=>{
   if(!dbCategoryData){
-    res.status(404).json({message:'No Categorie Matched'})
+    res.status(404).json({message:'No Categories Matched'})
     return
   }
   res.json(dbCategoryData)
