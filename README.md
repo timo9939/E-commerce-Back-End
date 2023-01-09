@@ -15,4 +15,8 @@ N/A
 
 ## Video Link
 
+### Categories Capture Video:
 
+### Product Capture Video:
+
+### Tags Capture Video:
