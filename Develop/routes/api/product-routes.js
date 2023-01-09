@@ -1,4 +1,5 @@
 const router = require('express').Router();
+// const { Model } = require('sequelize/types');
 const { Product, Category, Tag, ProductTag } = require('../../models');
 
 // The `/api/products` endpoint
@@ -7,12 +8,51 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 router.get('/', (req, res) => {
   // find all products
   // be sure to include its associated Category and Tag data
+Product.findAll({
+  
+  include:[
+    {
+    model:Category,
+    attributes:['category_name']
+  },
+    {model:Tag,
+    attributes:['tag_name']
+  }
+  ]
+})
+.then(dbProductData=>res.json(dbProductData))
+.catch(err=>{
+  console.log(err)
+})
+
 });
 
 // get one product
 router.get('/:id', (req, res) => {
   // find a single product by its `id`
   // be sure to include its associated Category and Tag data
+
+  Category.findOne({
+    where:{
+      id: req.params.id
+    },
+    include:{
+      model:Product,
+      attributes:['id','product_name','price','stock','category_id']
+    }
+  })
+  
+.then(dbCategoryData=>{
+  if(!dbCategoryData){
+    res.status(404).json({message:'No Categorie Matched'})
+    return
+  }
+  res.json(dbCategoryData)
+})
+
+.catch(err=>{
+  console.log(err)
+})
 });
 
 // create new product
@@ -31,7 +71,7 @@ router.post('/', (req, res) => {
       if (req.body.tagIds.length) {
         const productTagIdArr = req.body.tagIds.map((tag_id) => {
           return {
-            product_id: product.id,
+            product_id: product.id, 
             tag_id,
           };
         });
